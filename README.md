@@ -1,4 +1,4 @@
-# Shelf 📚
+# Shelf 
 
 ### What is this?
 **Shelf** is a simple website I built for my college project to help people find books without the clutter. It uses the **Google Books API** to pull real-time data, so you can search for a specific title or just browse through different categories like an encyclopedia.

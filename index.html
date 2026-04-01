@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shelf</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Shelf 📚</h1>
+    <input type="text" id="searchInput" placeholder="Search books or authors..." />
+    <button id="searchBtn">Search</button>
+  </header>
+
+  <section id="genres">
+    <button class="genre-btn" data-genre="fiction">Fiction</button>
+    <button class="genre-btn" data-genre="science">Science</button>
+    <button class="genre-btn" data-genre="biography">Biography</button>
+    <button class="genre-btn" data-genre="history">History</button>
+    <button class="genre-btn" data-genre="technology">Technology</button>
+  </section>
+
+  <div id="loader" class="hidden">Loading books...</div>
+
+  <div id="errorMsg" class="hidden">Something went wrong. Try again.</div>
+
+  <main id="booksGrid"></main>
+
+  <div id="modal" class="hidden">
+    <div id="modalContent">
+      <button id="closeModal">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

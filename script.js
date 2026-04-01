@@ -1,42 +1,68 @@
+const API_KEY = 'AIzaSyChzsm5k4Osk34V_FduwDmDdNQsQ3IF7WY'; 
 const bookContainer = document.getElementById('book-container');
 const loadingState = document.getElementById('loading-state');
 
-async function fetchBooks() {
+async function fetchBooks(query = 'subject:fiction') {
     loadingState.style.display = 'block';
     bookContainer.innerHTML = ''; 
 
+    // maxResults=20 gives us a good amount of data for the initial load //
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20&key=${API_KEY}`;
+
     try {
-        const response = await fetch('https://www.googleapis.com/books/v1/volumes?q=subject:fiction&maxResults=12');
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        displayBooks(data.items);
+        if (data.items && data.items.length > 0) {
+            displayBooks(data.items);
+        } else {
+            bookContainer.innerHTML = "<p>No books found for this category.</p>";
+        }
+
     } catch (error) {
-        console.error("Error fetching books:", error);
-        bookContainer.innerHTML = "<p>Opps! Something went wrong while loading books.</p>";
+        console.error("Fetch error:", error.message);
+        bookContainer.innerHTML = `<p>Error: Could not connect to the library. Please try again later.</p>`;
     } finally {
         loadingState.style.display = 'none';
     }
 }
 
-function displayBooks(books) {
-    if (!books) return;
 
+function displayBooks(books) {
     books.forEach(book => {
         const info = book.volumeInfo;
         
+        const title = info.title || "Untitled";
+        const authors = info.authors ? info.authors.join(', ') : "Unknown Author";
+        
+        let thumbnail = info.imageLinks ? info.imageLinks.thumbnail : 'https://via.placeholder.com/150x200?text=No+Cover';
+        if (thumbnail.startsWith('http://')) {
+            thumbnail = thumbnail.replace('http://', 'https://');
+        }
+
         const bookCard = document.createElement('div');
         bookCard.className = 'book-card';
 
-        const image = info.imageLinks ? info.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Cover';
-
         bookCard.innerHTML = `
-            <img src="${image}" alt="${info.title}">
-            <h3>${info.title}</h3>
-            <p>${info.authors ? info.authors.join(', ') : 'Unknown Author'}</p>
+            <div class="book-image">
+                <img src="${thumbnail}" alt="${title}">
+            </div>
+            <div class="book-info">
+                <h3>${title}</h3>
+                <p class="author">${authors}</p>
+                <button class="view-btn">View Details</button>
+            </div>
         `;
 
         bookContainer.appendChild(bookCard);
     });
 }
 
-fetchBooks();
+window.addEventListener('DOMContentLoaded', () => {
+    fetchBooks();
+});

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,4 +20,24 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+</html> -->
+
+<header>
+    <h1>Shelf</h1>
+    <div class="controls">
+        <input type="text" id="search-input" placeholder="Search by title or author...">
+        
+        <select id="sort-select">
+            <option value="relevance">Sort by: Relevance</option>
+            <option value="title-asc">Title: A to Z</option>
+            <option value="title-desc">Title: Z to A</option>
+        </select>
+    </div>
+
+    <div class="filter-buttons">
+        <button class="filter-btn" data-category="fiction">Fiction</button>
+        <button class="filter-btn" data-category="history">History</button>
+        <button class="filter-btn" data-category="science">Science</button>
+        <button class="filter-btn" data-category="art">Art</button>
+    </div>
+</header>

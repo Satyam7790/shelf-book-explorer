@@ -1,43 +1,57 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shelf | Discovery Engine</title>
+    <title>Shelf | Digital Library Encyclopedia</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header>
-        <h1>Shelf</h1>
-        <p>Discover your next read.</p>
+        <div class="header-content">
+            <h1>Shelf</h1>
+            <p class="tagline">Explore the world's library</p>
+            
+            <div class="control-panel">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search by title or author...">
+                </div>
+
+                <div class="sort-box">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select">
+                        <option value="relevance">Relevance</option>
+                        <option value="title-asc">Alphabetical (A-Z)</option>
+                        <option value="title-desc">Alphabetical (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <nav class="filter-bar">
+            <button class="filter-btn active" data-category="fiction">Fiction</button>
+            <button class="filter-btn" data-category="history">History</button>
+            <button class="filter-btn" data-category="science">Science</button>
+            <button class="filter-btn" data-category="art">Art</button>
+            <button class="filter-btn" data-category="technology">Tech</button>
+            <button class="filter-btn" data-category="biography">Biography</button>
+        </nav>
     </header>
 
     <main>
-        <div id="loading-state" style="display: none;">Searching the library...</div>
-        
-        <div id="book-container" class="grid-container"></div>
+        <div id="loading-state" class="loader-container">
+            <div class="spinner"></div>
+            <p>Curating your shelf...</p>
+        </div>
+
+        <div id="book-container" class="book-grid"></div>
     </main>
+
+    <footer>
+        <p>&copy; 2026 Shelf Project | Powered by Google Books API</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
-</html> -->
-
-<header>
-    <h1>Shelf</h1>
-    <div class="controls">
-        <input type="text" id="search-input" placeholder="Search by title or author...">
-        
-        <select id="sort-select">
-            <option value="relevance">Sort by: Relevance</option>
-            <option value="title-asc">Title: A to Z</option>
-            <option value="title-desc">Title: Z to A</option>
-        </select>
-    </div>
-
-    <div class="filter-buttons">
-        <button class="filter-btn" data-category="fiction">Fiction</button>
-        <button class="filter-btn" data-category="history">History</button>
-        <button class="filter-btn" data-category="science">Science</button>
-        <button class="filter-btn" data-category="art">Art</button>
-    </div>
-</header>
+</html>

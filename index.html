@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shelf | Digital Library Encyclopedia</title>
+    <title>Shelf | Digital Library</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        <div class="header-content">
+        <div class="top-row">
             <h1>Shelf</h1>
-            <p class="tagline">Explore the world's library</p>
-            
-            <div class="control-panel">
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Search by title or author...">
-                </div>
-
-                <div class="sort-box">
-                    <label for="sort-select">Sort by:</label>
-                    <select id="sort-select">
-                        <option value="relevance">Relevance</option>
-                        <option value="title-asc">Alphabetical (A-Z)</option>
-                        <option value="title-desc">Alphabetical (Z-A)</option>
-                    </select>
-                </div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search title or author...">
+                <select id="sort-select">
+                    <option value="relevance">Relevance</option>
+                    <option value="newest">Newest First</option>
+                    <option value="title-asc">Title: A-Z</option>
+                </select>
             </div>
         </div>
 
@@ -34,23 +26,18 @@
             <button class="filter-btn" data-category="history">History</button>
             <button class="filter-btn" data-category="science">Science</button>
             <button class="filter-btn" data-category="art">Art</button>
-            <button class="filter-btn" data-category="technology">Tech</button>
-            <button class="filter-btn" data-category="biography">Biography</button>
+            <button class="filter-btn" data-category="tech">Tech</button>
+            <button class="filter-btn" data-category="philosophy">Philosophy</button>
         </nav>
     </header>
 
     <main>
-        <div id="loading-state" class="loader-container">
+        <div id="loading-state" class="loader">
             <div class="spinner"></div>
-            <p>Curating your shelf...</p>
+            <p>Organizing your shelf...</p>
         </div>
-
         <div id="book-container" class="book-grid"></div>
     </main>
-
-    <footer>
-        <p>&copy; 2026 Shelf Project | Powered by Google Books API</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>

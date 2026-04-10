@@ -9,35 +9,44 @@
 <body>
 
     <header>
-        <div class="top-row">
+        <div class="brand">
             <h1>Shelf</h1>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search title or author...">
-                <select id="sort-select">
-                    <option value="relevance">Relevance</option>
-                    <option value="newest">Newest First</option>
-                    <option value="title-asc">Title: A-Z</option>
-                </select>
-            </div>
+            <p>A Minimalistic Encyclopedia</p>
+        </div>
+
+        <div class="search-area">
+            <input type="text" id="search-input" placeholder="Search by author, title, or era...">
+            <select id="sort-select">
+                <option value="relevance">Relevance</option>
+                <option value="newest">Newest</option>
+                <option value="title-asc">A-Z</option>
+            </select>
         </div>
 
         <nav class="filter-bar">
             <button class="filter-btn active" data-category="fiction">Fiction</button>
             <button class="filter-btn" data-category="history">History</button>
-            <button class="filter-btn" data-category="science">Science</button>
-            <button class="filter-btn" data-category="art">Art</button>
-            <button class="filter-btn" data-category="tech">Tech</button>
             <button class="filter-btn" data-category="philosophy">Philosophy</button>
+            <button class="filter-btn" data-category="poetry">Poetry</button>
+            <button class="filter-btn" data-category="science">Science</button>
         </nav>
     </header>
 
     <main>
         <div id="loading-state" class="loader">
             <div class="spinner"></div>
-            <p>Organizing your shelf...</p>
         </div>
+
         <div id="book-container" class="book-grid"></div>
+
+        <div class="pagination">
+            <button id="load-more-btn">Explore More</button>
+        </div>
     </main>
+
+    <footer>
+        <p>&copy; 2026 Shelf. Built JavaScript.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>

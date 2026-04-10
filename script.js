@@ -5,81 +5,117 @@ const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
 const filterButtons = document.querySelectorAll('.filter-btn');
 const loadMoreBtn = document.getElementById('load-more-btn');
-
+ 
 let allBooks = [];
 let currentIndex = 0;
 let currentQuery = 'subject:fiction';
 let searchTimer;
-
-
+ 
+function getPlaceholderSVG(title = '') {
+    const letter = title.charAt(0).toUpperCase() || '?';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300">
+        <rect width="200" height="300" fill="#e8ddd0"/>
+        <rect x="20" y="20" width="160" height="260" fill="#f5efe8" rx="2"/>
+        <text x="100" y="155" font-family="Georgia,serif" font-size="64" fill="#8b5e3c" text-anchor="middle" dominant-baseline="middle">${letter}</text>
+        <text x="100" y="230" font-family="Georgia,serif" font-size="11" fill="#a07850" text-anchor="middle">No Cover</text>
+    </svg>`;
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+ 
+function getThumbnail(imageLinks) {
+    if (!imageLinks) return null;
+    const raw = imageLinks.extraLarge
+        || imageLinks.large
+        || imageLinks.medium
+        || imageLinks.small
+        || imageLinks.thumbnail
+        || imageLinks.smallThumbnail
+        || null;
+    if (!raw) return null;
+    // Force HTTPS only — do NOT add zoom=2 (causes silent blank image on most books)
+    return raw.replace(/^http:\/\//i, 'https://');
+}
+ 
 async function fetchBooks(query, isLoadMore = false) {
     loadingState.style.display = 'block';
-    
+ 
     if (!isLoadMore) {
         currentIndex = 0;
         allBooks = [];
         bookContainer.innerHTML = '';
         currentQuery = query;
     }
-
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${currentIndex}&maxResults=40&key=${API_KEY}`;
-
+ 
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=${currentIndex}&maxResults=40&key=${API_KEY}`;
+ 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        
-        if (data.items) {
-            allBooks = [...allBooks, ...data.items];
-            
+ 
+        if (data.items && data.items.length > 0) {
+            const withImages = data.items.filter(book => getThumbnail(book.volumeInfo?.imageLinks));
+            allBooks = [...allBooks, ...withImages];
             currentIndex += 40;
-
-            const filtered = allBooks.filter(book => 
-                book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail
-            );
-            
-            if (filtered.length < 8 && currentIndex < 160) {
+ 
+            if (allBooks.length < 8 && currentIndex < 200) {
                 return fetchBooks(currentQuery, true);
             }
-
+ 
             renderBooks(allBooks);
-            loadMoreBtn.style.display = 'inline-block';
+            loadMoreBtn.style.display = allBooks.length > 0 ? 'inline-block' : 'none';
         } else {
-            if (!isLoadMore) bookContainer.innerHTML = "<p>No matches found in the archives.</p>";
+            if (!isLoadMore) {
+                bookContainer.innerHTML = '<p style="text-align:center;padding:4rem;color:var(--wood-light);font-style:italic;">No matches found in the archives.</p>';
+            }
             loadMoreBtn.style.display = 'none';
         }
     } catch (e) {
-        console.error("Archive Error", e);
+        console.error('Archive Error', e);
+        bookContainer.innerHTML = '<p style="text-align:center;padding:4rem;color:var(--wood-light);font-style:italic;">Could not reach the archive. Please try again.</p>';
     } finally {
         loadingState.style.display = 'none';
     }
 }
-
+ 
 function renderBooks(booksToDisplay) {
     bookContainer.innerHTML = '';
-
-    const validOnes = booksToDisplay.filter(b => b.volumeInfo.imageLinks?.thumbnail);
-
-    validOnes.forEach(book => {
+ 
+    booksToDisplay.forEach(book => {
         const info = book.volumeInfo;
-        const img = info.imageLinks.thumbnail.replace('zoom=1', 'zoom=2').replace('http://', 'https://');
-
+        const thumbnail = getThumbnail(info.imageLinks);
+        const fallbackSrc = getPlaceholderSVG(info.title);
+ 
         const card = document.createElement('div');
         card.className = 'book-card';
-        card.innerHTML = `
-            <div class="img-wrapper">
-                <img src="${img}" alt="Book Cover" onerror="this.src='https://via.placeholder.com/200x300?text=Archive+Copy'">
-            </div>
-            <h3>${info.title}</h3>
-            <p>${info.authors ? info.authors[0] : 'Unknown Author'}</p>
-        `;
+ 
+        const img = document.createElement('img');
+        img.alt = info.title || 'Book Cover';
+        img.src = thumbnail || fallbackSrc;
+        img.onerror = function () {
+            this.onerror = null;
+            this.src = getPlaceholderSVG(info.title);
+        };
+ 
+        const wrapper = document.createElement('div');
+        wrapper.className = 'img-wrapper';
+        wrapper.appendChild(img);
+ 
+        const title = document.createElement('h3');
+        title.textContent = info.title || 'Unknown Title';
+ 
+        const author = document.createElement('p');
+        author.textContent = info.authors ? info.authors[0] : 'Unknown Author';
+ 
+        card.appendChild(wrapper);
+        card.appendChild(title);
+        card.appendChild(author);
         bookContainer.appendChild(card);
     });
 }
-
+ 
 searchInput.addEventListener('input', (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     clearTimeout(searchTimer);
-
     searchTimer = setTimeout(() => {
         if (value.length > 2) {
             fetchBooks(value);
@@ -88,17 +124,17 @@ searchInput.addEventListener('input', (e) => {
         }
     }, 500);
 });
-
+ 
 sortSelect.addEventListener('change', () => {
     const val = sortSelect.value;
     if (val === 'title-asc') {
-        allBooks.sort((a, b) => a.volumeInfo.title.localeCompare(b.volumeInfo.title));
+        allBooks.sort((a, b) => (a.volumeInfo.title || '').localeCompare(b.volumeInfo.title || ''));
     } else if (val === 'newest') {
         allBooks.sort((a, b) => (b.volumeInfo.publishedDate || '').localeCompare(a.volumeInfo.publishedDate || ''));
     }
     renderBooks(allBooks);
 });
-
+ 
 filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
         filterButtons.forEach(b => b.classList.remove('active'));
@@ -106,7 +142,7 @@ filterButtons.forEach(btn => {
         fetchBooks(`subject:${btn.dataset.category}`);
     });
 });
-
+ 
 loadMoreBtn.addEventListener('click', () => fetchBooks(currentQuery, true));
-
+ 
 fetchBooks('subject:fiction');

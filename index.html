@@ -13,7 +13,6 @@
             <h1>Shelf</h1>
             <p>A Minimalistic Encyclopedia</p>
         </div>
-
         <div class="search-area">
             <input type="text" id="search-input" placeholder="Search by author, title, or era...">
             <select id="sort-select">
@@ -22,7 +21,6 @@
                 <option value="title-asc">A-Z</option>
             </select>
         </div>
-
         <nav class="filter-bar">
             <button class="filter-btn active" data-category="fiction">Fiction</button>
             <button class="filter-btn" data-category="history">History</button>
@@ -36,17 +34,17 @@
         <div id="loading-state" class="loader">
             <div class="spinner"></div>
         </div>
-
         <div id="book-container" class="book-grid"></div>
-
         <div class="pagination">
             <button id="load-more-btn">Explore More</button>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Shelf. Built JavaScript.</p>
+        <p>&copy; 2026 Shelf. Built with JavaScript.</p>
     </footer>
+
+    <div id="modal-overlay" aria-hidden="true"></div>
 
     <script src="script.js"></script>
 </body>

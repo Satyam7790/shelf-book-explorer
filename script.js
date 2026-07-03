@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyChzsm5k4Osk34V_FduwDmDdNQsQ3IF7WY';
+
 const bookContainer = document.getElementById('book-container');
 const loadingState = document.getElementById('loading-state');
 const searchInput = document.getElementById('search-input');
